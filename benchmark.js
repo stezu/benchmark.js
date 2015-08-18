@@ -5,7 +5,7 @@
  * Modified by John-David Dalton <http://allyoucanleet.com/>
  * Available under MIT license <http://mths.be/mit>
  */
-;(function(window, undefined) {
+;(function(undefined) {
   'use strict';
 
   /** Used to assign each benchmark an incrimented id */
@@ -15,7 +15,7 @@
   var doc = isHostType(window, 'document') && document;
 
   /** Detect free variable `define` */
-  var freeDefine = typeof define == 'function' &&
+  var freeDefine = false && typeof define == 'function' &&
     typeof define.amd == 'object' && define.amd && define;
 
   /** Detect free variable `exports` */
@@ -781,7 +781,7 @@
           anchor = freeDefine ? define.amd : Benchmark,
           prop = uid + 'createFunction';
 
-      runScript((freeDefine ? 'define.amd.' : 'Benchmark.') + prop + '=function(' + args + '){' + body + '}');
+      runScript((freeDefine ? 'define.amd.' : 'this.') + prop + '=function(' + args + '){' + body + '}');
       result = anchor[prop];
       delete anchor[prop];
       return result;
@@ -1136,7 +1136,7 @@
         sibling = doc.getElementsByTagName('script')[0],
         parent = sibling.parentNode,
         prop = uid + 'runScript',
-        prefix = '(' + (freeDefine ? 'define.amd.' : 'Benchmark.') + prop + '||function(){})();';
+        prefix = '(' + (freeDefine ? 'define.amd.' : 'this.') + prop + '||function(){})();';
 
     // Firefox 2.0.0.2 cannot use script injection as intended because it executes
     // asynchronously, but that's OK because script injection is only used to avoid
@@ -3909,11 +3909,11 @@
   else {
     // use square bracket notation so Closure Compiler won't munge `Benchmark`
     // http://code.google.com/closure/compiler/docs/api-tutorial3.html#export
-    window['Benchmark'] = Benchmark;
+    this['Benchmark'] = Benchmark;
   }
 
   // trigger clock's lazy define early to avoid a security error
   if (support.air) {
     clock({ '_original': { 'fn': noop, 'count': 1, 'options': {} } });
   }
-}(this));
+}());
