@@ -778,10 +778,10 @@
     // lazy define
     createFunction = function(args, body) {
       var result,
-          anchor = freeDefine ? define.amd : Benchmark,
+          anchor = freeDefine ? define.amd : window,
           prop = uid + 'createFunction';
 
-      runScript((freeDefine ? 'define.amd.' : 'this.') + prop + '=function(' + args + '){' + body + '}');
+      runScript((freeDefine ? 'define.amd.' : 'window.') + prop + '=function(' + args + '){' + body + '}');
       result = anchor[prop];
       delete anchor[prop];
       return result;
@@ -1131,12 +1131,12 @@
    * @param {String} code The code to run.
    */
   function runScript(code) {
-    var anchor = freeDefine ? define.amd : Benchmark,
+    var anchor = freeDefine ? define.amd : window,
         script = doc.createElement('script'),
         sibling = doc.getElementsByTagName('script')[0],
         parent = sibling.parentNode,
         prop = uid + 'runScript',
-        prefix = '(' + (freeDefine ? 'define.amd.' : 'this.') + prop + '||function(){})();';
+        prefix = '(' + (freeDefine ? 'define.amd.' : 'window.') + prop + '||function(){})();';
 
     // Firefox 2.0.0.2 cannot use script injection as intended because it executes
     // asynchronously, but that's OK because script injection is only used to avoid
